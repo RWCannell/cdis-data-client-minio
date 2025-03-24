@@ -31,8 +31,8 @@ func uploadToMinIOBucket() {
 		log.Fatalln(err)
 	}
 
-	uploadFileName := "If_by_Rudyard_Kipling.pdf"
-	uploadFilePath := "../data_uploads/If_by_Rudyard_Kipling.pdf"
+	uploadFileName := ""
+	uploadFilePath := ""
 
 	if _, err := s3Client.FPutObject(context.Background(), bucketName, uploadFileName, uploadFilePath, minio.PutObjectOptions{
 		ContentType: "application/*",
