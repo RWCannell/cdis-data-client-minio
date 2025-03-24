@@ -14,6 +14,38 @@ import (
 
 // go:generate mockgen -destination=./gen3-client/mocks/mock_gen3interface.go -package=mocks github.com/uc-cdis/gen3-client/gen3-client/g3cmd Gen3Interface
 
+minio_object = {
+	"guid": guid,
+	"file_name": object_name,
+	"md5": str(obj.etag).strip('"'),
+	"file_size": obj.size,
+	"acl": ["*"],
+	"authz": ["/programs/gen3Program502/projects/P502"],
+	"urls": [f"https://{self.minio_api_endpoint}/{self.minio_bucket_name}/{obj.object_name}"],
+}
+
+// MinIORequestObject represents the payload that sends to a MinIO endpoint for upload
+type MinIORequestObject struct {
+	GUID      string
+	Filename  string `json:"file_name"`
+	Filesize  int64  `json:"file_size"`
+	Authz     struct {
+		Version        string   `json:"version"`
+		ResourcePaths  []string `json:"resource_paths"`
+	} `json:"authz"`
+	Aliases   []string `json:"aliases"`
+	// Metadata is an encoded JSON string of any arbitrary metadata the user wishes to upload.
+	Metadata  map[string]interface{} `json:"metadata"`
+}
+
+// MinIOResponseObject represents the payload that gets fetched from a MinIO GET request
+type MinIOResponseObject struct {
+	Filename  string `json:"file_name"`
+	Filesize  int64  `json:"file_size"`
+	// Metadata is an encoded JSON string of any arbitrary metadata the user wishes to upload.
+	Metadata  map[string]interface{} `json:"metadata"`
+}
+
 // useSSL for MinIO client
 const useSSL = true
 
